@@ -26,7 +26,8 @@ public:
 
 	recoverTreeHelp(root->left);
 
-	if( root->val < prev->val ){
+	if( prev !=NULL &&  root->val < prev->val ){
+
 	    if(bugid == 0 ) {
 		bug0 = prev;
 		bug1 = root;
@@ -40,7 +41,7 @@ public:
 
 	}
 	prev = root;
-//	cout<<prev->val<<" "<<endl;
+
 
 
 	recoverTreeHelp(root->right);
@@ -48,7 +49,7 @@ public:
 
     void recoverTree( TreeNode * root){
 	this->bugid = 0 ; 
-	this->prev = root;
+	this->prev = NULL;
 	this->bug0 = root;
 	this->bug1 = root;
 	recoverTreeHelp(root);
@@ -70,6 +71,12 @@ public:
 int main(){
     Solution sol;
 
+    TreeNode * root = new TreeNode ( 2); 
+    root->left = new TreeNode (1);
+    root->right = NULL; 
+    root->left->left = NULL;
+    root->left->right = new TreeNode (3);
+    /*
     TreeNode * root = new TreeNode (7);
     root->left = new TreeNode (2) ;
 //    root->right =  NULL ;
@@ -82,6 +89,7 @@ int main(){
     root->right->left = new TreeNode (5) ;
     root->right->right = new TreeNode (4) ;
     root->right->right->right = new TreeNode (8) ;
+    */
 
     sol.printTree( root);
     cout<<endl;
