@@ -16,14 +16,6 @@ struct TreeNode {
 
 class Solution{
 public:
-    /*
-    vector<int> levelOrderHelper(TreeNode *root){
-	ret.push_back(root->val); 
-	if(root->left) levelOrderHelp(root->left) ; 
-	if(root->right) levelOrderHelp(root->right) ; 
-    }
-    */
-
     vector<vector<int> > levelOrder(TreeNode *root){
 	if( root == NULL) return {};
 
