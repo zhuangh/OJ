@@ -21,22 +21,19 @@ struct TreeNode {
 
 class Solution {
 public:
-    void Helper( TreeNode * root, vector<int> & result, 
-		 int cur, vector<int> & marked ){
+    void Helper( TreeNode * root, vector<int> & result, int cur, vector<int> & marked ){
 	if(root == NULL) return;
 	if( marked.size() == cur ){
 	    marked.push_back(1);
-	    result.push_back(root->val); 
+	    result.push_back(root->val);
 	}
-
 	Helper(root->right, result , cur+1, marked);  
 	Helper(root->left , result , cur+1, marked); 
     }
 
     vector<int> rightSideView(TreeNode * root){
-	vector<int> result;
+	vector<int> result, marked;
 	if(root == NULL) return result;
-	vector<int> marked;
 	Helper(root, result, 0, marked); 
 	return result;
     }
