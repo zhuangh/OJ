@@ -23,10 +23,13 @@ class Solution {
 public:
     void Helper( TreeNode * root, vector<int> & result, int cur, vector<int> & marked ){
 	if(root == NULL) return;
+	/*
 	if( marked.size() == cur ){
 	    marked.push_back(1);
 	    result.push_back(root->val);
 	}
+	*/
+	if ( result.size() == cur) result.push_back(root->val);
 	Helper(root->right, result , cur+1, marked);  
 	Helper(root->left , result , cur+1, marked); 
     }
