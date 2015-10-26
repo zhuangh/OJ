@@ -59,7 +59,7 @@ public:
 int main(){
     int mya[] = {2,9,10};
     int myb[] = {3,7,15};
-    in[0]t mye[] = {5,12,12};
+    int mye[] = {5,12,12};
     int myc[] = {15,20,10};
     int myd[] = {19,24,8};
 
