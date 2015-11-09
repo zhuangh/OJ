@@ -1,2 +1,5 @@
+Problems pending: 
 https://leetcode.com/problems/dungeon-game/
 https://leetcode.com/problems/regular-expression-matching/
+https://leetcode.com/problems/longest-increasing-subsequence/ dynamic O(n^2) and O(nlogn)  
+
