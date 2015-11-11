@@ -4,26 +4,6 @@
 #include<string>
 using namespace std;
 
-/*
-'.' Matches any single character.
-'*' Matches zero or more of the preceding element.
-
-The matching should cover the entire input string (not partial).
-
-The function prototype should be:
-bool isMatch(const char *s, const char *p)
-
-Some examples:
-isMatch("aa","a") → false
-isMatch("aa","aa") → true
-isMatch("aaa","aa") → false
-isMatch("aa", "a*") → true
-isMatch("aa", ".*") → true
-isMatch("ab", ".*") → true
-isMatch("aab", "c*a*b") → true
-*/
-
-
 class Solution{
 
 void test_function( vector<int> ps){
@@ -45,16 +25,13 @@ public:
 	vector< int > ps1 ( sl);
 	//	vector< int > ps2 ( sl);
 	ps1[0]=1;
-
-//	test_function(ps1);
 	for ( int i = 1 ; i < pl ; i++){
 	    for ( int j = 0 ; j < sl ; j++){
 		if (  p[i-1] != '*' ){
-//			cout<<p[i-1]<<" with ps1["<<i-1<<","<<j-1<<"] "<<ps1[j-1]<<endl;
 		    if( ps1[j-1] && ( p[i-1] == s[j-1] || p[i-1] == '?') )  { 
 			ps0[j] = 1;
 		    }
-		    else ps0[j]=0;
+		    else ps0[j]=0; // remember to set 0 , this is very different if we use two dimensional array, which has the initialized value 0; 
 		}
 		else{
 //		    cout<<"---"<<p[i-1]<<" with ps1["<<i-1<<","<<j-1<<"] "<<ps1[j-1]<<endl;

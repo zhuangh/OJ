@@ -58,7 +58,7 @@ public:
 		    if( (i>1 && ps[i-2][j]) || // remove the previous p 
 			(j> 0 &&( ps[i][j-1]) || ps[i-1][j-1] ) && (p[i-2] == s[j-1] || p[i-2] =='.')  ) // extend * with 0 to multiple copies 
 			{
-			ps[i][j] = 1 ;  
+			    ps[i][j] = 1 ;  
 			}
 		}
 	    // cout<<i<<j<<endl;
