@@ -23,47 +23,52 @@ isMatch("ab", ".*") → true
 isMatch("aab", "c*a*b") → true
 */
 
-// #define DEBUG
 
 class Solution{
+
+void test_function( vector< vector<int> > ps){
+
+	for(int i = 0 ; i < ps.size() ; i++){
+	    for(int j = 0 ; j < ps[i].size()  ; j++){
+		cout<<ps[i][j] << " " ;
+	    }
+	    cout<<endl;
+	}
+	cout<<endl;
+}
+
+
 public:
     bool isMatch(string s, string p){
 	int sl = s.size()+1;
 	int pl = p.size()+1;
-	vector< vector<int> > sp ( sl, vector<int> (pl)  );
-	sp[0][0] = 1;
+	vector< vector<int> > ps ( pl, vector<int> (sl)  );
+	ps[0][0] = 1;
+//	for( int i = 0 ; i < sl ; i++) ps[0][i] = 1;
 
 	// sp[i][j] = 1 means s[1:i] matches p[1:j] 
-	for ( int i = 1 ; i < sl ; i++){
-	    for ( int j = 1 ; j < pl ; j++){
-		if( p[j-1] == s[i-1] && sp[i-1][j-1] == 1) sp[i][j] = 1;
-		else{
-		    if( p[j-1] == '.' && sp[i-1][j-1] == 1) sp[i][j] =1;
-		    if ( p[j-1] == '*' )
-		    {
-			if (sp[i-1][j-1] == 1)  sp[i][j] = 1; // correct character in p[j-2]*, so extend  
-			if (sp[i-1][j-2] == 1) sp[i-1][j] = 1; // wrong character in p[j-2]*  
-
-#ifdef DEBUG
-			cout<<i<<" , "<<j<<":" ;
-			cout<<p[j-2]<<endl;
-			cout<<sp[i-1][j-1] << " , " <<sp[i-1][j-2]<<endl;
-#endif
-		    }
+	for ( int i = 1 ; i < pl ; i++){
+	    for ( int j = 0 ; j < sl ; j++){
+		// scan s[j] 
+		if (  p[i-1] != '*' ){
+		    if( j>0 && ps[i-1][j-1] && ( p[i-1] == s[j-1] || p[i-1] == '.') )  ps[i][j] = 1;
 		}
+		else{
+		    // p[i] == '*'
+		    if( (i>1 && ps[i-2][j]) || // remove the previous p 
+			(j> 0 &&( ps[i][j-1]) || ps[i-1][j-1] ) && (p[i-2] == s[j-1] || p[i-2] =='.')  ) // extend * with 0 to multiple copies 
+			{
+			ps[i][j] = 1 ;  
+			}
+		}
+	    // cout<<i<<j<<endl;
 	    }
 	}
-#ifdef DEBUG
-	for(int i = 0 ; i < sl; i++){
-	    for(int j = 0 ; j < pl; j++){
-		cout<<sp[i][j] << " " ;
-	    }
-	    cout<<endl;
-	}
-#endif
-	return sp[sl-1][pl-1];
+//	test_function(ps);
+	return ps[pl-1][sl-1];
     }
 };
+
 
 int main(){
     Solution a ; 
@@ -77,6 +82,10 @@ int main(){
     cout<<   a.isMatch("ab", ".*") <<endl;
     cout<<   a.isMatch("aab", "c*a*b") <<endl ;
     cout<<   a.isMatch("aaa", "ab*a") <<endl ;
+
+    cout<<   a.isMatch("aaa", "ab*a*c*a") <<endl ;
+    cout<<   a.isMatch("aaba", "ab*a*c*a") <<endl ;
+    cout<<   a.isMatch("aaaa", ".*") <<endl ;
     return 0; 
 }
 
