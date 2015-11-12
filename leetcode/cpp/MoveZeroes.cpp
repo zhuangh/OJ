@@ -15,6 +15,7 @@ public:
 	int sz = nums.size();
 	if(sz == 0 || sz == 1) return;
 
+	/*
 	int nzero_cnt= 0; 
 	for( int i = 0 ; i < sz ; i++){
 	    if( nums[i] != 0 ) nzero_cnt++;
@@ -35,11 +36,23 @@ public:
 	    }
 	    z_pos++;
 	}
+	*/
 
-	for( int i = z_pos; i < sz; i++){
+	int pz = 0 , pnz =0 ; 
+
+	for( ; pnz < nums.size() ; pnz++){
+	    if( nums[pnz] == 0) continue; 
+	    nums[pz] = nums[pnz];
+	    pz++;
+	}
+
+	for( int i = pz; i < sz; i++){
 	    nums[i] = 0;
 	}
     }
+
+
+
 };
 
 
