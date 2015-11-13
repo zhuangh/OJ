@@ -1,6 +1,6 @@
 Problems pending: 
 https://leetcode.com/problems/dungeon-game/
 https://leetcode.com/problems/longest-increasing-subsequence/ dynamic O(n^2) and O(nlogn)  
-https://leetcode.com/problems/add-and-search-word-data-structure-design/ 
-Do it again for Convert Sorted List to Binary Search Tree using AVL . 
+https://leetcode.com/problems/add-and-search-word-data-structure-design/  Do it again for Convert Sorted List to Binary Search Tree using AVL . 
+https://leetcode.com/problems/number-of-islands/ try to use union-find 
 
