@@ -5,7 +5,8 @@ using namespace std;
 
 class Solution {
 public:
-        int lengthOfLIS(vector<int>& nums) {
+    // n^2 
+        int LengthOfLIS(vector<int>& nums) {
 
 	    if ( nums.size() == 0) return 0;
 	    vector<int> seq( nums.size(), 1);
@@ -22,6 +23,11 @@ public:
 		}
 	    }
 	    return max_seq;
+	}
+
+	// nlogn
+        int lengthOfLIS(vector<int>& nums) {
+
 	}
 
 };
