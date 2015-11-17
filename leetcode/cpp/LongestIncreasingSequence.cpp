@@ -26,6 +26,8 @@ public:
 	}
 
 	// nlogn
+	// also check the acm/icpc template by Jaehyun Park (poj: router) from Stanford
+	// http://stanford.edu/~liszt90/acm/notebook.html#file28 
         int lengthOfLIS(vector<int>& nums) {
 
 	}
