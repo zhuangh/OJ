@@ -33,6 +33,18 @@ Repeat the parts:
 
 - searching problem, DFS, BFS and cut edge
 
+- sorting: heapsort 
+
+- streaming algo. : https://en.wikipedia.org/wiki/Streaming_algorithm 
+
+- bloom filter : http://www.eecs.harvard.edu/~michaelm/postscripts/im2005b.pdf 
+
+- lru: http://www.yufengof.com/2015/11/18/lru-and-linkedhashmap-source-code/ 
+
+
+- REX matching using state machine? http://articles.leetcode.com/2011/09/regular-expression-matching.html
+
+
 network-flow problem https://web.stanford.edu/class/cs97si/08-network-flow-problems.pdf
 
 https://www.topcoder.com/community/data-science/data-science-tutorials/minimum-cost-flow-part-one-key-concepts/
@@ -45,6 +57,9 @@ https://www.quora.com/What-is-the-best-maximum-flow-algorithm-to-be-used-in-prog
 
 https://www.quora.com/What-are-some-algorithms-and-data-structures-which-should-definitely-be-included-in-ones-ACM-ICPC-team-notebook
 
+http://stanford.edu/~liszt90/acm/notebook.html
+
+- Advanced data structure: http://courses.csail.mit.edu/6.851/spring14/scribe/2012scribes.pdf
 
 HZ @ UCSD CSE 
 
