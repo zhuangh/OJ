@@ -18,7 +18,7 @@ foj: http://acm.fzu.edu.cn
 
 uva: http://uva.onlinejudege.org  
 
-leetcode: http://leetcode.com 
+ltOJ: leetcode: http://leetcode.com 
 
 
 Repeat the parts: 
