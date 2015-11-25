@@ -59,7 +59,10 @@ https://www.quora.com/What-are-some-algorithms-and-data-structures-which-should-
 
 http://stanford.edu/~liszt90/acm/notebook.html
 
+algorithm review (in Chinese) http://blog.csdn.net/v_july_v/article/details/6543438 thanks to July's blog 
+
 - Advanced data structure: http://courses.csail.mit.edu/6.851/spring14/scribe/2012scribes.pdf
+
 
 HZ @ UCSD CSE 
 
