@@ -6,16 +6,15 @@ using namespace std;
 
 struct SegTreeNode{
     int subsum ; 
+    int inc; //
     int lnum, rnum;
     SegTreeNode * left;
     SegTreeNode * right;
-//public:
-    SegTreeNode(): subsum(0), lnum(0), rnum(0), left(NULL), right(NULL) {};
+    SegTreeNode(): subsum(0), inc(0), lnum(0), rnum(0), left(NULL), right(NULL) {};
 };
 
 class NumArray {
     int z_CONST;
-
     vector<int> * num;
     SegTreeNode * tree_root;
     SegTreeNode * tree_seg_array ; 
@@ -30,15 +29,29 @@ public:
 	   // log N 
 	   SegTreeNode tree;
 	   tree_root = &(tree_seg_array[0]);
-//	   cout<<"Address of tree root = @"<<tree_root<<endl;
 	   BuildSegTree(  tree_root , 0 ,  num->size() - 1, 0 );
-//	   cout<<"Tree build Finished"<<endl;
 	}
-//	cout<<"Address of tree root = @"<<tree_root<<endl;
     }
 
     ~NumArray(){
 	if( num->size() >= z_CONST) 	delete [] tree_seg_array; 
+    }
+
+    void updateSegTree(SegTreeNode * root, int i , int j , int delta){
+	int mid = (root->lnum + root->rnum)/2;
+//	printf("root->lnum = %d, root->rnum=%d, i=%d, mid=%d, j=%d\n", root->lnum, root->rnum, i,mid, j);
+	if( root->lnum == i && root->rnum == j) {
+	    root->inc += delta ;
+	    return;
+	} 
+	root->subsum += delta*(j-i+1);
+
+	if( j <= mid ) updateSegTree(root->left, i, j, delta);  
+	else if ( i>mid)  updateSegTree(root->right, i, j, delta);  
+	else {
+	    updateSegTree(root->left, i, mid, delta);  
+	    updateSegTree(root->right, mid+1, j, delta);  
+	}
     }
 
     void printAddress(){
@@ -46,9 +59,7 @@ public:
     }
 
     void BuildSegTree( SegTreeNode * pRoot, int low , int high, int index){
-
 //	cout<<low<<" --- "<<high<<" with subsum = ";
-    
 	pRoot->lnum = low;
 	pRoot->rnum = high;
 	pRoot->subsum =  CalSubsum( low, high);
@@ -84,6 +95,7 @@ public:
 	}
     }
 
+
     void SearchUpdateSegTree(SegTreeNode * root, int i , int delta){
 	if( root == NULL ) return; 
 	int mid = (root->lnum + root->rnum)/2;
@@ -99,23 +111,33 @@ public:
 
 	if( j< num->size()) {
 	    int sum = 0 ; 
-	    sumRangeHelper(tree_root, sum , i , j); 
-	    return sum;
+	    return sumRangeHelper(tree_root,  i , j); 
 	}
-	return 0;
     }
 
-    void sumRangeHelper( SegTreeNode * root, int & sum , int i , int j){
-	if(root == NULL) return ; 
-
-	if ( i == root->lnum && j == root->rnum) {sum+= root->subsum; return;} 
+    int sumRangeHelper( SegTreeNode * root, int i , int j){
+	//	if(root == NULL) return ; 
+	if ( i == root->lnum && j == root->rnum) {
+	    return root->subsum + (j-i+1) * root->inc; 
+	} 
 
 	int mid = (root->lnum+ root->rnum)/2;
-	if ( j <= mid )    { sumRangeHelper(root->left , sum, i, j);  } 
-	if ( i >  mid )    { sumRangeHelper(root->right, sum, i, j); }
+	root->subsum += (j-i+1)*root->inc;
+
+	if( root->inc > 0){
+	    if( j <= mid ) updateSegTree( root->left, i, j , root->inc);
+	    else if( i >  mid ) updateSegTree( root->right, i, j , root->inc);
+	    else{
+		updateSegTree( root->left, i, mid , root->inc);
+		updateSegTree( root->right, mid+1,j , root->inc);
+	    }
+	    root->inc = 0; 
+	}
+
+	if ( j <= mid )    { return sumRangeHelper(root->left ,  i, j);  } 
+	if ( i >  mid )    { return sumRangeHelper(root->right,  i, j); }
 	if ( i <= mid && j > mid) {
-	    sumRangeHelper(root->left , sum, i   , mid);
-	    sumRangeHelper(root->right, sum, mid+1, j);
+	   return sumRangeHelper(root->left ,  i   , mid) + sumRangeHelper(root->right,  mid+1, j);
 	}
     }
 
@@ -125,22 +147,16 @@ public:
 //	    cout<<z_start<<" -- "<< z_end<<endl;
 	    for( int i = z_start ; i <= z_end ; i++){
 		updateLTE(i, (*num)[i]+delta); 
-//		print();
 	    }
 	}
 	else {
-
-//	    cout<<z_start<<" --wtf-- "<< z_end<<endl;
-	    
-//		    cout<<"delta "<< delta<<endl;
-	    for( int i = z_start ; i <= z_end ; i++){
-
-		(*num)[i] += delta; 
-
-		SearchUpdateSegTree( tree_root, i , delta); 
-
-//		print();
+	    updateSegTree(tree_root, z_start, z_end, delta);  
+	    /*
+	       for( int i = z_start ; i <= z_end ; i++){
+	       (*num)[i] += delta; 
+	       SearchUpdateSegTree( tree_root, i , delta); 
 	    }
+	     */
 	}
     }
 
@@ -162,8 +178,6 @@ public:
 	queue<SegTreeNode *> * ncur = &next_queue;
 //	int i= 0 ;
 	while( !ncur->empty()){
-//	    cout<<"pcur @" <<pcur<<endl;
-//	    cout<<"ncur @"<<ncur<<endl;
 	    queue<SegTreeNode *> * tcur = pcur;
 	    pcur = ncur;
 	    ncur = tcur;
@@ -207,8 +221,6 @@ public:
 };
 
 int main(){
-
-
     int N, Q;
     cin>>N>>Q;
     vector<int> num;
@@ -233,8 +245,6 @@ int main(){
 	}
 	else if(opt_type=='Q') {
 	    cin>>a>>b; 
-
-    // sol.print();
 //	    results.push_back(sol.sumRange(a-1,b-1));
 	    cout<<sol.sumRange(a-1,b-1)<<endl;
 //	    query_num++;
