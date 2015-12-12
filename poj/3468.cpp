@@ -144,3 +144,36 @@ int main(){
    return 0;
 }
 
+
+/*
+// LTE by cin cout
+int main(){
+    int N, Q;
+    cin>>N>>Q;
+    for(int i = 0 ; i < N; i++){
+	scanf("%lld", &nums[i]);
+    }
+   NumArray sol(N);
+    int query_num = 0;
+    for(int i = 0 ; i < Q; i++){
+	char opt_type;
+	int a;
+	int b;
+	int c;
+	cin>>opt_type;
+	if( opt_type == 'C' ) {
+	    cin>>a>>b>>c;
+	    sol.update(a-1,b-1,c);
+	}
+	else if(opt_type=='Q') {
+	    cin>>a>>b; 
+	    cout<<sol.sumRange(a-1,b-1)<<endl;
+	}
+	else{
+	    ;
+	}
+    }
+    return 0;
+}
+*/
+
