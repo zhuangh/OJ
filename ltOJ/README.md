@@ -19,4 +19,5 @@ Try trie problems   https://leetcode.com/problems/word-search-ii/
 
 Try searching problem, DFS, BFS and cut edge
 
+https://leetcode.com/problems/course-schedule/ https://leetcode.com/problems/course-schedule-ii/
 
