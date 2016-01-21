@@ -16,12 +16,8 @@ class Solution{
 	return res; 
     }
 
-    void addOptDFS(vector<string> & result, string num, long target , 
-		  vector<string> & buffer,
-		  int sep,
-		  long op1,
-		  long op2
-		  ){
+    void addOptDFS(vector<string> & result, string num, long target , vector<string> & buffer,
+		  int sep,  long op1,  long op2){
 
 	if ( num.length() == sep &&  op1 + op2 == target){
 	    result.push_back( bufferConstruct( buffer));
@@ -31,10 +27,7 @@ class Solution{
 	for( int i = 0 ; i < num.length() - sep ; i++){
 	    op3 = 10*op3+ ( (char) num[sep + i] - '0');
 	    string val = std::to_string(op3);
-//cout<<i<<endl;     
-//cout<<val<<endl;
-//	    int op3 = stoi( val );
-	    
+    
 	    buffer.push_back("+"+val);
 	    addOptDFS( result, num, target, buffer, sep+i+1, op1+op2 , op3 );
 	    buffer.pop_back();
@@ -76,6 +69,7 @@ int main(){
 
     for( auto it : b )
 	cout<<it<<endl;
+
     return 0;
 }
 
