@@ -11,8 +11,6 @@ leetcode.com/problems/reverse-linked-list-ii/
 
 Try divide and conquer problems https://leetcode.com/problems/median-of-two-sorted-arrays/
 
-Try trie problems   https://leetcode.com/problems/word-search-ii/
-
 Try searching problem, DFS, BFS and cut edge
 
 https://leetcode.com/problems/course-schedule/ https://leetcode.com/problems/course-schedule-ii/
