@@ -10,42 +10,42 @@ class Solution {
 public:
 
     /*
-    bool wbhelper(map< pair<int,int>,int> & mm, unordered_set<string> & wordDict, string s, int st, int en ){
-	if( st >= en) return true;
-	for( int i = st ; i < en  ; i++){
+       bool wbhelper(map< pair<int,int>,int> & mm, unordered_set<string> & wordDict, string s, int st, int en ){
+       if( st >= en) return true;
+       for( int i = st ; i < en  ; i++){
 
-	   if ( mm[make_pair ( st, i-st+1 )] == 1 ) continue;
-	   bool res = ( wordDict.find( s.substr( st, i - st + 1 )) != wordDict.end());
+       if ( mm[make_pair ( st, i-st+1 )] == 1 ) continue;
+       bool res = ( wordDict.find( s.substr( st, i - st + 1 )) != wordDict.end());
 
-	   if (res == false) {
-	       mm[ make_pair(st, i - st + 1)] = 1 ;
-	   }
+       if (res == false) {
+       mm[ make_pair(st, i - st + 1)] = 1 ;
+       }
 
-    	   if( res == true && wbhelper(mm, wordDict, s, i+ 1 , en ) ) { 
-	       return true;
-	   }
-	}
-	return false;
-    } 
+       if( res == true && wbhelper(mm, wordDict, s, i+ 1 , en ) ) { 
+       return true;
+       }
+       }
+       return false;
+       } 
 
-    bool wordBreak1( string s, unordered_set<string> & wordDict){
-	map< pair<int, int> , int > mm ; 
-	for( int i = 0 ; i < s.length()  ; i++){
+       bool wordBreak1( string s, unordered_set<string> & wordDict){
+       map< pair<int, int> , int > mm ; 
+       for( int i = 0 ; i < s.length()  ; i++){
 
-	   if ( mm[make_pair ( 0, i +1 )] == 1 ) continue;
-	   bool res = ( wordDict.find( s.substr( 0 , i + 1 )) != wordDict.end());
-	   if (res == false) {
-	       mm[make_pair( 0 , i  + 1) ] = 1; ;
-	   }
-    	   if( true ==  res && wbhelper(mm, wordDict, s, i+1, s.length() ) ) {
-	       return true;
-	   }
-	}
-	return false;
-    } 
-    */
+       if ( mm[make_pair ( 0, i +1 )] == 1 ) continue;
+       bool res = ( wordDict.find( s.substr( 0 , i + 1 )) != wordDict.end());
+       if (res == false) {
+       mm[make_pair( 0 , i  + 1) ] = 1; ;
+       }
+       if( true ==  res && wbhelper(mm, wordDict, s, i+1, s.length() ) ) {
+       return true;
+       }
+       }
+       return false;
+       } 
+     */
 
-    bool wordBreak( string s, unordered_set<string> & wordDict){
+    bool wordBreakI( string s, unordered_set<string> & wordDict){
 	vector< int > mm ( s.length() ); 
 
 	for( int i = 0 ; i <= s.length() - 1 ; i++){
@@ -64,15 +64,75 @@ public:
 	mm[st] = 1;
 	return false;
     }
+
+
+
+    bool wbHelperII ( vector<string> & res, string tmp, 
+		      vector<int>  & mm, string s,  
+		      int st , int en , 
+		      unordered_set<string> wordDict ){
+
+	if( st > en ){
+	    res.push_back(tmp);
+	    return true;
+	}
+	if( mm[st] == -1 ) return false;
+
+	bool flag = false;
+	for( int i = st ; i <=  en   ; i++){
+	    string tmpp;
+	    if( wordDict.find( s.substr( st, i - st+1)) != wordDict.end() ){
+		tmpp = tmp +" "+s.substr(st,i-st+1); 
+		if( true == wbHelperII ( res, tmpp ,  mm, s, i+1, en , wordDict) ) {
+		    flag = true; 
+		}   
+	    }
+	}
+	if( flag == false  ) {
+	    mm[st]  = -1; 
+	    return false;
+	}   
+	return true;
+    }   
+
+    vector<string> wordBreak( string s, unordered_set<string> & wordDict){
+	vector<string> res; 
+	vector< int > mm ( s.length(),  0   );
+	for( int i = 0 ; i <= s.length() - 1 ; i++){
+	    string tmp = s.substr(0,i+1) ; 
+	    if(  wordDict.find( s.substr(0 , i +1) )   != wordDict.end()){
+		wbHelperII (res, tmp, mm, s, i+1, s.length() - 1 , wordDict) ;
+	    }   
+	}   
+	return res;
+    }
 };
 
 int main(){
     Solution a;
     unordered_set<string> wd ;
     wd.insert("leet");
+    wd.insert("leet");
 //    wd.insert("cod");
     wd.insert("code");
+    wd.insert("cat");
+    wd.insert("cats");
+    wd.insert("sand");
+    wd.insert("and");
+    wd.insert("dog");
+    wd.insert("aaaa");
+    wd.insert("aa");
+    wd.insert("a");
+
  //   wd.insert("leetcode");
-    cout<<a.wordBreak("leetcode", wd )<<endl;
+    cout<<a.wordBreakI("catsanddog", wd )<<endl;
+
+    cout<<endl;
+    // for( auto it : a.wordBreak("catsanddog", wd))
+    for( auto it : a.wordBreak("aaaaaaa", wd))
+	cout<<it<<endl;
+
     return 0;
+
 }
+
