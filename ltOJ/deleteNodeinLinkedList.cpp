@@ -210,10 +210,6 @@ public:
 	    if( nums[i] == cand1 ) cnt1++; 
 	    else if( nums[i] == cand2 ) cnt2++; 
 	}
-	cout<<cand1<<endl;
-	cout<<cand2<<endl;
-	cout<<cnt1<<endl;
-	cout<<cnt2<<endl;
 	if( cnt1> floor(nums.size()/3) ) res.push_back(cand1);
 	if( cnt2> floor(nums.size()/3) ) res.push_back(cand2);
 	return res;
