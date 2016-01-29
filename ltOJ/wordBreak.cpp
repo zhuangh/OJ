@@ -3,6 +3,7 @@
 #include<unordered_set>
 #include<map>
 #include<vector>
+#include<algorithm>
 
 using namespace std;
 
@@ -145,6 +146,44 @@ public:
 	wbHelperIII (res, "", mm, s, 0 , s.length() - 1 , wordDict) ;
 	return res;
     }
+
+    void gameOfLife(vector<vector<int>>& board) {
+
+    }
+
+    vector<vector<int> > subsets( vector<int> & nums){
+	 vector<vector<int> > res;
+	 
+	 vector<int> sn; 
+	 res.push_back(sn); 
+	 if( nums.size() == 0 ) return res;
+
+	 sort(nums.begin(), nums.end());
+	 sn.push_back( nums[0]);
+	 res.push_back(sn);
+
+	 if( nums.size() == 1) return res;
+
+	 for( int i = 1; i < nums.size() ;i++){
+	     subsetHelper( nums, i , res );
+	 }
+	 return res;
+    }
+
+
+    void subsetHelper( vector<int> nums, int l , vector< vector<int> > & res){
+	vector< vector<int> > tmp_set;
+	for( int i = 0 ; i < res.size(); i++ ){
+	    vector<int> tmp = res[i];
+	    tmp.push_back( nums[l]);
+	    tmp_set.push_back(tmp);
+
+	}
+
+	for( auto it : tmp_set ){
+	    res.push_back(it);
+	}
+    }
 };
 
 int main(){
@@ -166,6 +205,18 @@ int main(){
      for( auto it : a.wordBreak("catsanddog", wd))
 //    for( auto it : a.wordBreak("aaaaaaa", wd))
 	cout<<it<<endl;
+
+//     a.gameOfLife(board);
+     vector<int> nums = {1,2,3};
+     for(auto it : a.subsets(nums))
+     {
+	 for(auto itt : it)
+	     cout<<itt<<" ";
+	 cout<<endl;
+     }
+
+
+
 
     return 0;
 
