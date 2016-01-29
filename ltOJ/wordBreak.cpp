@@ -49,7 +49,9 @@ public:
 	vector< int > mm ( s.length() ); 
 
 	for( int i = 0 ; i <= s.length() - 1 ; i++){
-	    if(  wordDict.find( s.substr(0 , i +1) )   != wordDict.end()  && wbHelper ( mm, s, i+1, s.length() - 1 , wordDict)  == true ) return true;
+	    if(  wordDict.find( s.substr(0 , i +1) )   != wordDict.end()  
+		 && wbHelper ( mm, s, i+1, s.length() - 1 , wordDict)  == true ) 
+		return true;
 	}
 	return false;
     }
@@ -95,7 +97,7 @@ public:
 	return true;
     }   
 
-    vector<string> wordBreak( string s, unordered_set<string> & wordDict){
+    vector<string> wordBreakII( string s, unordered_set<string> & wordDict){
 	vector<string> res; 
 	vector< int > mm ( s.length(),  0   );
 	for( int i = 0 ; i <= s.length() - 1 ; i++){
@@ -106,14 +108,49 @@ public:
 	}   
 	return res;
     }
+
+    // ------- 
+    bool wbHelperIII ( vector<string> & res, string tmp, vector<int>   mm, string s,  
+		       int st , int en , unordered_set<string> wordDict ){
+	if( st >= en ){
+	    res.push_back(tmp);
+	    return true;
+	}
+	for( int i = st ; i <=  en   ; i++){
+	    if( mm[i] ==1 ) {
+		string tmpp;
+		if( tmp.empty () ){ tmpp =  s.substr(st,i-st+1);}
+		else   tmpp = tmp + " " + s.substr(st,i-st+1); 
+		if( wordDict.find( s.substr(st,i-st+1) ) != wordDict.end() ) { 
+		    wbHelperIII( res, tmpp, mm, s, i+1, en, wordDict);
+		}
+	    }
+	}
+	return true;
+    }   
+
+    vector<string> wordBreak( string s, unordered_set<string> & wordDict){
+	vector<string> res; 
+	vector< int > mm ( s.length(),  0);
+	// preprocessing via DP ?
+	for ( int i = 0 ; i < s.length() ; i++){
+	    for( int j = i ; j  >= 0 && !mm[i] ; j--){
+		if( j > 0 ) mm[i] = mm[j-1] && ( wordDict.find(s.substr( j  , i - j + 1 )) != wordDict.end() ) ; 
+		else mm[i] = ( wordDict.find(s.substr( j  , i - j + 1 )) != wordDict.end() ) ; 
+	    }
+	}
+//	for( auto it : mm ) 	cout<<it<<" ";
+//	cout<<endl;
+	if( mm[s.length()-1] == 0 ) return res;
+	wbHelperIII (res, "", mm, s, 0 , s.length() - 1 , wordDict) ;
+	return res;
+    }
 };
 
 int main(){
     Solution a;
     unordered_set<string> wd ;
     wd.insert("leet");
-    wd.insert("leet");
-//    wd.insert("cod");
     wd.insert("code");
     wd.insert("cat");
     wd.insert("cats");
@@ -124,12 +161,10 @@ int main(){
     wd.insert("aa");
     wd.insert("a");
 
- //   wd.insert("leetcode");
-    cout<<a.wordBreakI("catsanddog", wd )<<endl;
-
-    cout<<endl;
-    // for( auto it : a.wordBreak("catsanddog", wd))
-    for( auto it : a.wordBreak("aaaaaaa", wd))
+    //   wd.insert("leetcode");
+//    cout<<a.wordBreakI("catsanddog", wd )<<endl;
+     for( auto it : a.wordBreak("catsanddog", wd))
+//    for( auto it : a.wordBreak("aaaaaaa", wd))
 	cout<<it<<endl;
 
     return 0;
