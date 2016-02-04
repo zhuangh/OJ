@@ -7,6 +7,7 @@
 #include<algorithm>
 
 #include<string>
+#include<queue>
 
 
 using namespace std;
@@ -608,12 +609,110 @@ public:
 	return prod;
     }
 
+    int numSquares(int n) {
+	// vector<int> nums(n+1, 1000000);
+	vector<int> qq;
+	vector<int> smallest_sq ( n+1, 0 ); 
+	queue<int> q_result, q_result_next; 
 
-};
+	for( int i = 1 ; i*i <= n ;i++)   { 
+	    //cout<<i*i<<endl;
+	    qq.push_back( i*i );
+	    //		smallest_sq[i*i] = 1; 
+	}
+	int sz = qq.size();
+
+	q_result_next.push( n);
+	int level = 0 ; 
+
+	while(!q_result_next.empty()){
+	    swap( q_result, q_result_next);
+	    level++;
+	    //	    cout<<"----"<<level<<endl;
+	    while(!q_result.empty()){
+		int target = q_result.front();
+		q_result.pop();
+		//		cout<<target<<" : "<<endl;
+		//		cout<<level<<endl;
+		for( int j = 0  ; j < qq.size() ; j++){
+		    int i = qq[j];
+		    if( target - i > 0 ) { 
+			if( smallest_sq[target- i ] == 0 ){// || smallest_sq[target-i] == 1) {
+			    //cout<<target-i<<endl;
+			    q_result_next.push( target - i ) ;
+			    smallest_sq[ target - i ] = -1 ;
+			}
+			//			else if( smallest_sq[ target - i ] == 1 ){ 
+			//			    return level +1 ;
+			//			}
+			}
+			else if ( target == i ) {
+			    return level;
+			} else {
+			    break;
+			}
+		    }
+		}
+	    } // while for q_result_next
+	    return 0;
+	}
+
+
+
+
+	int numSquares1(int n) {
+	    static vector<int> _s_nums(1,0);
+	    /*
+	       _s_nums.push_back(0);
+	       _s_nums.push_back(1);
+	       _s_nums.push_back(2);
+	       _s_nums.push_back(3);
+	     */
+	    int m = _s_nums.size() - 1;
+	    if( n <= m ) return  _s_nums[n];
+	    else{
+		for( int i = m+1; i <= n ; i++){
+		    int res = sqrt(i);
+		    int min_res = _s_nums[i-1] + 1; 
+		    for( int j = 1 ; j*j<=i ;j++){
+			min_res = min (  min_res ,  _s_nums[i-j*j] + 1 ) ;
+		    }
+		    _s_nums.push_back(min_res);
+		}
+
+	    }
+	    return  _s_nums[n];
+	}
+	vector<int> grayCode(int n) {
+	    vector<int> res; 
+	    if ( n == 0 ) return res;
+	    int level = n;
+	    gcHelper( res , 0 , 0 , level , 0);
+	    return res;
+	}
+
+	void gcHelper( vector<int> & res,  int val , int cur , int tot_level, int flip ){
+	    if( cur == tot_level ){
+		res.push_back(val );
+		cout<<val<<endl;
+		return;
+	    }
+	    if( flip == 0) {
+		gcHelper( res, 2*val   , cur+1, tot_level, 0);
+		gcHelper( res, 2*val+1 , cur+1, tot_level, 1);
+	    }
+	    else  {
+		gcHelper( res, 2*val+1  , cur+1, tot_level, 0);
+		gcHelper( res, 2*val , cur+1, tot_level, 1);
+	    }
+	    return;
+	}
+    };
 
 
 int main(){
     Solution a;
+    /*
     unordered_set<string> wd ;
     wd.insert("leet");
     wd.insert("code");
@@ -625,14 +724,13 @@ int main(){
     wd.insert("aaaa");
     wd.insert("aa");
     wd.insert("a");
+    */
 
     //   wd.insert("leetcode");
     //    cout<<a.wordBreakI("catsanddog", wd )<<endl;
     //     for( auto it : a.wordBreak("catsanddog", wd))
     //	cout<<it<<endl;
-
     //    for( auto it : a.wordBreak("aaaaaaa", wd))
-
     //    a.gameOfLife(board);
     /*
        vector<int> nums = {1,2,0,1};
@@ -643,16 +741,23 @@ int main(){
        cout<<endl;
        }
      */
+    /*
     vector<int> nums = {100,4,1,2,3,0,200};
-    cout<<endl<<" lcs "<< a.longestConsecutiveRadix(nums)<<endl;
+    cout<<endl<<"lcs -- "<< a.longestConsecutiveRadix(nums)<<endl;
     cout<<a.power(2,10)<<endl;
-//    cout<<a.power_via_string(2,9)<<endl;
+    */
+   // cout<<a.numSquares1(1535)<<endl;
+    cout<<a.numSquares1(13)<<endl;
+    cout<<a.numSquares1(12)<<endl;
+vector<int> vec =  a.grayCode(3) ;
+cout<<"\nsz: "<<vec.size();
+for( auto it : vec) cout<<endl<<it;
+cout<<endl;
+    //    cout<<a.power_via_string(2,9)<<endl;
     /*
        string ss = " ";//"hello kitty";// " ; 
        a.reverseWords(ss );
        cout<<ss<<endl;
-
-
        for( auto it : a.letterCombinations("23"))
        cout<<it<<endl;
 
@@ -663,15 +768,28 @@ int main(){
 
 }
 
-    /*
-       vector<vector<int>> threeSumLTE(vector<int>& nums) {
 
-       vector<int> sn ;
-       vector< vector<int> > res, res_gl ;
-       if (nums.size() < 3) return res_gl;
-       res.push_back(sn);
-       sn.push_back(nums[0]);
-       res.push_back(sn);
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+   vector<vector<int>> threeSumLTE(vector<int>& nums) {
+
+   vector<int> sn ;
+   vector< vector<int> > res, res_gl ;
+   if (nums.size() < 3) return res_gl;
+   res.push_back(sn);
+   sn.push_back(nums[0]);
+   res.push_back(sn);
 // S_i = S_i-1 + (S_i-1 union num_i)
 
 
@@ -702,7 +820,7 @@ res_gl.push_back(res[i]);
 }
 return res_gl;
 }
-     */
+ */
 /*
    vector<int> twoSum(vector<int>& nums, int target) {
 // sort(nums.begin(),nums.end());
