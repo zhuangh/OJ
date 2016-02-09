@@ -1,5 +1,6 @@
 #include<iostream>
 #include<unordered_set>
+#include<unordered_map>
 #include<string>
 #include<vector>
 #include<queue> 
@@ -152,6 +153,51 @@ public:
 	if( dist[1] < INF) { return 1; } 
 	return 0;
     }
+
+    bool wordPattern( string pattern , string str){
+        if( pattern.size() == 0 ) return false;
+        p_s.clear();
+        s_p.clear();
+        int j = 0 ; 
+        int cnt = 0;
+        for( int i = 0 ; i < str.length(); i++){
+            if( str[i] == ' ' || i == str.length() - 1) {
+                // cout<<j<<"--"<<i<<endl;
+                string  tmp;
+                if( str.length() - 1 == i) tmp = str.substr(j,i-j+1);
+                else tmp = str.substr(j,i-j ); 
+                //cout<<tmp<<"  @p "<<   pattern[cnt] <<endl;
+                 
+                if( s_p.find(tmp) != s_p.end()  )  {
+                    if ( s_p[tmp] != pattern[cnt]) {
+               //         cout<<  pattern[cnt]  << " 2 "<< s_p[tmp] <<endl;
+                           return false ;
+                    }
+                }
+                else {
+                    s_p[tmp] = pattern[cnt];
+                }
+                
+                if( p_s.find( pattern[cnt]  ) != p_s.end()){
+                    if ( p_s[pattern[cnt]] != tmp) { 
+                //        cout<< p_s[pattern[cnt] ]<< " 1 "<< tmp<<endl;
+                        return false ;
+                    }
+                }
+                else  p_s[ pattern[cnt] ] = tmp;
+                
+                cnt++;
+                j = i+1;
+               
+            }
+        }
+        if(cnt == pattern.size() )  return true;
+        return false;
+    }
+    
+private:
+    unordered_map<char, string> p_s;
+    unordered_map<string, char> s_p;
 
 };
 

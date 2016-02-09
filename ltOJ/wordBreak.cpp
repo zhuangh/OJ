@@ -4,6 +4,8 @@
 #include<unordered_map>
 #include<map>
 #include<vector>
+
+#include<stack>
 #include<algorithm>
 
 #include<string>
@@ -11,6 +13,13 @@
 
 
 using namespace std;
+
+struct ListNode {
+int val ; 
+ListNode * next;
+ListNode (int dat) : val(dat), next(NULL){}
+};
+
 
 class Solution {
 public:
@@ -574,24 +583,24 @@ public:
 	return result;
 
 	/*
-	int prod = a;
-	int i = 0;
-	int iter = (int) ( log(b) / log(2));
-	int lf = b% (1<<iter) ;
-	cout<<iter<<endl;
-	cout<<lf<<endl;
-	while( i < iter ){
-	    prod = prod * prod;
-	    i++;
-	}
-	for( int i = 0 ; i < lf ;i++) prod *= a;
-	return prod;
-	*/
+	   int prod = a;
+	   int i = 0;
+	   int iter = (int) ( log(b) / log(2));
+	   int lf = b% (1<<iter) ;
+	   cout<<iter<<endl;
+	   cout<<lf<<endl;
+	   while( i < iter ){
+	   prod = prod * prod;
+	   i++;
+	   }
+	   for( int i = 0 ; i < lf ;i++) prod *= a;
+	   return prod;
+	 */
     }
 
     void product( string & res, string p1, string p2){
-	
-	
+
+
     }
 
     string power_via_string( int a, int b){
@@ -638,7 +647,6 @@ public:
 		    int i = qq[j];
 		    if( target - i > 0 ) { 
 			if( smallest_sq[target- i ] == 0 ){// || smallest_sq[target-i] == 1) {
-			    //cout<<target-i<<endl;
 			    q_result_next.push( target - i ) ;
 			    smallest_sq[ target - i ] = -1 ;
 			}
@@ -707,149 +715,289 @@ public:
 	    }
 	    return;
 	}
+
+	int maximalRectangle(vector<vector<char>>& matrix) {
+	    int xdim = matrix.size();
+	    if(xdim <= 0 ) return 0;
+	    int ydim = matrix[0].size();
+	    vector<int> xopt0 ( ydim, 0);    
+	    vector<int> xopt1 ( ydim, 0);    
+	    vector<int> yopt0 ( ydim, 0);
+	    vector<int> yopt1 ( ydim, 0);
+	    int area = 0 ; 
+	    xopt0[0] = ( matrix[0][0]=='1'?1:0);
+	    yopt0[0] = ( matrix[0][0]=='1'?1:0);
+
+	    //	    cout<<"area "<<area<<endl;
+	    for( int j = 1 ; j < ydim; j++){
+		if(matrix[0][j]=='1') {
+		    xopt0[j] = 1; 
+		    yopt0[j] = yopt0[j-1]+1; 
+		    area = max(area, yopt0[j]);
+		}
+		else {
+		    xopt0[j] = 0;
+		    yopt0[j] = 0; 
+		}
+	    } 
+	    //	    cout<<"area "<<area<<endl;
+	    for( int i = 1 ; i < xdim; i++){ 
+		if( matrix[i][0] == '1'){
+		    xopt1[0] = xopt0[0]+1 ; 
+		    yopt1[0] = 1;
+		    area = max(area, xopt1[0]);
+		}
+		else{
+		    xopt1[0] = 0 ; 
+		    yopt1[0] = 0;
+		}
+		for( int j = 1 ; j<ydim;j++){
+		    //		    cout<<matrix[i][j]<<" matrix ";
+		    if( matrix[i][j]=='1'){
+
+			int xtmp = 1+min( xopt0[j-1], xopt0[j]); 
+			int ytmp = 1+min( yopt0[j-1], yopt1[j-1]); 
+			// x direction
+
+
+			int area1 = (1+xopt0[j]) * (1+min(yopt0[j] , yopt0[j-1]));
+//			cout<<endl;
+//			cout<<area1<<endl;
+
+			int area_tmp = area1; 
+			int area2 = (1+yopt1[j-1]) * (min(xopt1[j-1] , xopt0[j-1]));
+
+//			cout<<area2<<endl;
+
+			if( area1 > area2 ) {
+			    xopt1[j] = 1+xopt0[j];
+			    yopt1[j] = (1+min(yopt0[j] , yopt0[j-1]));
+			}
+			else{
+			    xopt1[j] = 1+min(xopt1[j-1] , xopt0[j-1]);
+			    yopt1[j] = 1+yopt1[j-1];
+			    area_tmp = area2;
+			} 
+			int area3 = xtmp * ytmp; 
+			if( area3 > xopt1[j]*yopt1[j]) {
+			    xopt1[j] = xtmp;
+			    yopt1[j] = ytmp;
+			    area_tmp = area3;
+			} 
+//			cout<<area3<<endl;
+
+			// y direction
+			// x y direction 
+			area = area> area_tmp ? area : area_tmp;  
+		    }
+		    else {
+			xopt1[j] = 0; 
+			yopt1[j] = 0;
+		    } 
+		    cout<<yopt1[j]<<",";
+		    cout<<xopt1[j]<<" ";
+		}
+		cout<<endl;
+		swap(xopt1, xopt0);
+		swap(yopt1, yopt0);
+	    }
+	    return area ; 
+	}
+ 
+void output(vector< vector<string> > & res ,  vector<string> & buffer,  unordered_map<string, vector<string> > prev_map , string start, string end ){
+    if( start == end  ){
+        reverse(buffer.begin(), buffer.end());
+        res.push_back(  buffer ) ; 
+        reverse(buffer.begin(), buffer.end());
+    }
+    vector<string> tmp = prev_map[end];
+    for( auto it : tmp ){
+       //vector<string> buffer_new = buffer;
+       buffer.push_back( it );
+       output( res, buffer, prev_map, start , it )  ;
+       buffer.pop_back( );
+    }
+}
+
+ 
+
+vector<vector<string> > findLadders(string start, string end, unordered_set<string> &dict) {
+        // BFS 
+        unordered_map<string, int > visited; 
+        unordered_map<string, vector<string> > prev_map; 
+
+        queue<string> cur,next;
+        next.push( start );
+        vector<vector < string> > res; 
+        bool flag = false;
+        while( !next.empty()  && !flag){
+            swap(next,cur);
+            while(!cur.empty()){
+                string tmp = cur.front();
+                cur.pop();
+                for( int i = 0 ; i < tmp.length() ; i++){
+                    string st = tmp;
+                    for( char c = 'a' ; c <= 'z'; c++){
+                        //char old = st[i];
+                        st[i] = c;
+                        if( end == st ){
+                            // hit the end word
+                            prev_map[ st ].push_back(tmp);
+                            flag = true;
+                        }
+                        else if( dict.find(st) != dict.end() &&  visited[st] == 0 ) {
+                            visited[st] = 1;
+                            // found the changed word
+                            next.push(st); 
+                            prev_map[ st ].push_back(tmp);
+                        }
+                        // st[i] = old;
+                    }
+                }
+            }
+        }
+        vector<string> buf ; 
+        output(res, buf , prev_map, start, end);
+        
+        return res; 
+    }
+
     };
 
+struct TreeNode{
+	int val;
+	TreeNode *left, *right;
+	TreeNode( int dat ) : val(dat), left(NULL), right(NULL) {}
+};
 
-int main(){
-    Solution a;
-    /*
-    unordered_set<string> wd ;
-    wd.insert("leet");
-    wd.insert("code");
-    wd.insert("cat");
-    wd.insert("cats");
-    wd.insert("sand");
-    wd.insert("and");
-    wd.insert("dog");
-    wd.insert("aaaa");
-    wd.insert("aa");
-    wd.insert("a");
-    */
+class Codec {
+public:
 
-    //   wd.insert("leetcode");
-    //    cout<<a.wordBreakI("catsanddog", wd )<<endl;
-    //     for( auto it : a.wordBreak("catsanddog", wd))
-    //	cout<<it<<endl;
-    //    for( auto it : a.wordBreak("aaaaaaa", wd))
-    //    a.gameOfLife(board);
-    /*
-       vector<int> nums = {1,2,0,1};
-       for(auto it : a.subsets(nums))
-       {
-       for(auto itt : it)
-       cout<<itt<<" ";
-       cout<<endl;
-       }
-     */
-    /*
-    vector<int> nums = {100,4,1,2,3,0,200};
-    cout<<endl<<"lcs -- "<< a.longestConsecutiveRadix(nums)<<endl;
-    cout<<a.power(2,10)<<endl;
-    */
-   // cout<<a.numSquares1(1535)<<endl;
-    cout<<a.numSquares1(13)<<endl;
-    cout<<a.numSquares1(12)<<endl;
-vector<int> vec =  a.grayCode(3) ;
-cout<<"\nsz: "<<vec.size();
-for( auto it : vec) cout<<endl<<it;
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        
+        if( root == NULL ) return "#";
+        string st = to_string(root->val) + "," + serialize(root->left) +"," + serialize(root->right);
+        return st;
+    }
+
+    TreeNode* des ( vector<string> vec , int & i ) {
+        
+        if( i >= vec.size() ) {  return NULL;}
+        if( vec[i]=="#") {  return NULL;}
+        cout<<i<<endl;
+        TreeNode * head = new TreeNode (stoi(vec[i]));
+         cout<<head->val<<" i = ";
+        cout<<i<<endl;
+        i++;
+        head->left = des (vec, i);
+        head->right = des (vec, i);
+        
+        return head;
+    }
+    
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        
+        vector<string> vec;
+        for( int j = 0, i = 0 ; i < data.length() ; i++){
+            if(data[i] == ',' ) {
+                vec.push_back(data.substr(j,i-j));
+                j = i+1;
+            }
+            else if( i == data.length() - 1 ) {
+                vec.push_back(data.substr(j,1+i-j));
+            }
+            
+        }
+          for( auto it : vec) cout<<it<<endl;
+    // cout<<vec.size()<<endl;
+    int i = 0;
+        TreeNode * head = des ( vec, i);
+        return head ;
+        
+    }
+};
+
+
+    int main(){
+	Solution a;
+	/*
+	   unordered_set<string> wd ;e
+	   wd.insert("leet");
+	   wd.insert("code");
+	   wd.insert("cat");
+	   wd.insert("cats");
+	   wd.insert("sand");
+	   wd.insert("and");
+	   wd.insert("dog");
+	   wd.insert("aaaa");
+	   wd.insert("aa");
+	   wd.insert("a");
+	 */
+
+	//   wd.insert("leetcode");
+	//    cout<<a.wordBreakI("catsanddog", wd )<<endl;
+	//     for( auto it : a.wordBreak("catsanddog", wd))
+	//	cout<<it<<endl;
+	//    for( auto it : a.wordBreak("aaaaaaa", wd))
+	//    a.gameOfLife(board);
+	/*
+	   vector<int> nums = {1,2,0,1};
+	   for(auto it : a.subsets(nums))
+	   {
+	   for(auto itt : it)
+	   cout<<itt<<" ";
+	   cout<<endl;
+	   }
+	 */
+	/*
+	   vector<int> nums = {100,4,1,2,3,0,200};
+	   cout<<endl<<"lcs -- "<< a.longestConsecutiveRadix(nums)<<endl;
+	   cout<<a.power(2,10)<<endl;
+	 */
+	// cout<<a.numSquares1(1535)<<endl;
+	/*
+	cout<<a.numSquares1(13)<<endl;
+	cout<<a.numSquares1(12)<<endl;
+	vector<int> vec =  a.grayCode(3) ;
+	cout<<"\nsz: "<<vec.size();
+	for( auto it : vec) cout<<endl<<it;
+	cout<<endl;
+
+	*/
+
+	// vector<vector<char> > mat = { {'0','0','0'} ,  {'1','1','1'} };
+//	vector<vector<char> > mat = { {'1','0','1','0','0'} ,  {'1','0','1','1','1'} , {'1','1','1','1','1'}, {'1','0','0','1','0'} };
+//	cout<<"area "<< a.maximalRectangle( mat )<<endl;
+	
+	ListNode aa (3);
+	ListNode b (2);
+	ListNode c (1);
+
+	ListNode d (10);
+	aa.next = &b;
+	b.next = &c;	
+	c.next = &d;
+	ListNode * aaa = &aa;
+        ListNode * tmp = NULL;//  = a.insertionSortList(aaa); 
+	cout<<tmp<<endl;
+	while( tmp){
+		cout<<tmp->val<<" ";
+		tmp = tmp->next;
+	}
+	cout<<endl;
+
+		string start = "a";
+  string end = "c";
+  unordered_set<string> dict;
+dict.insert("a");dict.insert("b");dict.insert("c");
+vector<vector <string> > tttt = a.findLadders(  start, end, dict );
+for(auto it : tttt) { 
+	for(auto itt : it ) cout<<itt<<" "; 
 cout<<endl;
-    //    cout<<a.power_via_string(2,9)<<endl;
-    /*
-       string ss = " ";//"hello kitty";// " ; 
-       a.reverseWords(ss );
-       cout<<ss<<endl;
-       for( auto it : a.letterCombinations("23"))
-       cout<<it<<endl;
-
-       vector<int> nums1 = {1,2,0,1, -2 ,1};
-       cout<<a.longestConSum(nums1)<<endl;
-     */
-    return 0;
-
 }
+	return 0;
 
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-   vector<vector<int>> threeSumLTE(vector<int>& nums) {
-
-   vector<int> sn ;
-   vector< vector<int> > res, res_gl ;
-   if (nums.size() < 3) return res_gl;
-   res.push_back(sn);
-   sn.push_back(nums[0]);
-   res.push_back(sn);
-// S_i = S_i-1 + (S_i-1 union num_i)
-
-
-
-for( int i = 1 ; i < nums.size() ; i++){
-subsets(nums, i, res);
-}
-
-for( auto it : res ){
-for(auto itt : it) cout<<itt<<" ";
-cout<<endl;
-} 
-
-set< vector<int>  > mm;
-for( int i = 0 ; i < res.size() ;i++){
-if( res[i].size() == 3 ) {
-int sum = 0; 
-for(auto it : res[i]) sum+= it;
-if(sum == 0 ) {
-
-sort(res[i].begin(), res[i].end());
-if( mm.find(res[i]) == mm.end() ){
-mm.insert( res[i] );
-res_gl.push_back(res[i]);
-}
-}
-}
-}
-return res_gl;
-}
- */
-/*
-   vector<int> twoSum(vector<int>& nums, int target) {
-// sort(nums.begin(),nums.end());
-// int j = 0, k = nums.size()-1;
-// O(n^2)
-for( int i = 0 ; i < nums.size() ; i++){
-int t = target - nums[i];
-int k = nums.size()-1;
-while ( k> i){
-if( nums[k] == t) return vector<int>{1+i,1+k};
-k--;
-}
-}
-return vector<int>{};
-}
-
-vector<int> twoSumMap(vector<int>& nums, int target) {
-// sort(nums.begin(),nums.end());
-// int j = 0, k = nums.size()-1;
-unordered_map<int,int> ms;
-// unordered_map<int,int> id;
-// O(2n) 
-for( int i = 0 ; i < nums.size() ; i++){
-ms[nums[i]] = i+1;
-// id[i+1] = nums[i];
-}
-for( int i = 0 ; i < nums.size() ; i++){
-int idd =  ms[target - nums[i]] ;
-if(idd > 0 && idd!=i+1) return vector<int> {i+1,idd};
-}
-}
- */
