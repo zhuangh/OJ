@@ -44,43 +44,41 @@ public:
         iter->isWord = true;
     }
 
-    bool search(TrieNode * rt, string word, int i ){
-        if( !rt ) return false;
-        if( i == word.length() ){
-            if( rt->isWord ) {
-	//	cout<<"word Found!"<<endl;
-		return true;
-	    }
-	    else{
-	//	cout<<"word NOT Found!"<<endl;
-		return false;
-	    }
-        }
-        int idx = (int) word[i] - (int) 'a';
-        return search(rt->next[ idx ], word , i+1);
-    }
+    
     // Returns if the word is in the trie.
     bool search(string word) {
-        return search(root, word, 0);
+	TrieNode * iter = root;
+	for( int i = 0; i < word.length() ; i++){
+	    int idx = (int) word[i] - (int) 'a';
+	    if( iter->next[idx] ) iter=iter->next[idx];
+	    else {
+		//cout<<"NOT FOUND"<<endl;
+		return false;
+	    }
+	}
+	if( iter->isWord ) 
+	{
+	    //cout<<"FOUND"<<endl;
+	    return true;
+	}
+	return false;
     }
 
     // Returns if there is any word in the trie
     // that starts with the given prefix.
-    bool startsWith( TrieNode * rt , string word, int i){
-        if( !rt ) return false;
-        if( i == word.length())  {
-	 //   cout<<"word prefix FOUND"<<endl;
-	    return true;
-	}
-	else{ 
-	  //  cout<<"word prefix NO FOUND!"<<endl;
-	    return false;
-	}
-        int idx = (int) word[i] - (int) 'a';
-        return startsWith(rt->next[ idx ], word , i+1);
-    }
     bool startsWith(string prefix) {
-        return startsWith( root, prefix, 0) ; 
+	TrieNode * iter = root;
+	for( int i =  0 ; i < prefix.length(); i++){
+	    int idx = (int) prefix[i] - (int) 'a';
+	    if( iter->next[idx] ) iter=iter->next[idx]; 
+	    else {
+	//	cout<<"NOT FOUND"<<endl;
+		return false;
+	    }
+	}
+
+	//cout<<"FOUND"<<endl;
+	return true;
     }
 
 private:
