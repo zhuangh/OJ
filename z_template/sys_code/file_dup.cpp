@@ -1,4 +1,3 @@
-#include <sys/stat.h>
 #include <fstream>
 #include <sstream>
 #include <stdlib.h>
@@ -32,14 +31,6 @@ std::unordered_map< string , vector<string> > same_files;
 
 
 
-void listDupFiles( char * workingDir, vector< vector <string> > & dupf ){
-    return  ; 
-}
-
-void mt_listDupFiles( char * workingDir, vector< vector <string> > & dupf ){
-    return  ; 
-}
-
 void listFilesNow( string workingDir, string location){
     // DFS traverse the whole ./workingDir
     auto dir = opendir(workingDir.c_str() );
@@ -67,7 +58,7 @@ void listFilesNow( string workingDir, string location){
 		    cout<<"created date " << var.st_ctime  <<endl;
 		    */
 		}
-		ifstream input(name.c_str(), std::ios::binary);
+		ifstream input(wholepath.c_str(), std::ios::binary);
 		ostringstream ost;
 		ost<< input.rdbuf();
 		string cont ( ost.str());
@@ -209,13 +200,43 @@ public:
     virtual void action();
 };
 */
+void * zmemcpy(void * dst, const void * src, size_t size)
+{
+    char *psrc;
+    char *pdst;
+    if( NULL == dst || NULL == src){
+	return NULL;
+    }
+
+    if( src < dst && (char * ) src + size > (char *) dst ){
+	psrc = (char*) src + size - 1;
+	pdst = (char*) dst + size - 1;
+	while( size--) {
+	    *pdst-- = * psrc--;
+	}
+    }
+    else{
+	psrc = (char*) src;
+	pdst = (char*) dst;
+	while(size){
+	    *pdst++ = *psrc++;
+	}
+    }
+    return dst;
+}
 
 int main(){
     //    listFilesInWorkingDirectory(); 
     //   cout<<endl;
     int option = 1; 
-
-    if( option == 1){
+    if( option == 0){
+	char buf[100] = "abcdefg";
+	zmemcpy( buf + 2 , buf , 7); 
+	printf("%s\n", buf+2); //abcdefg
+//	memcpy( buf + 2 , buf , 7); // abababe 
+//	printf("%s\n", buf+2);
+    }
+    else if( option == 1){
 	/*
 	   listDupFiles(workingDir, dupfile); 
 	   mt_listDupFiles(workingDir, dupfile); 
@@ -223,7 +244,8 @@ int main(){
 	char wdbuf [ MAXNAMLEN];
 
 	auto workingDir = getcwd( wdbuf, MAXNAMLEN);
-	string wd = "/home/zhuang/Dropbox/papers/"; 
+	//string wd = "/home/zhuang/Dropbox/papers/"; 
+	string wd = "."; 
 	// output = [  
 	// ["/foo/bar.png", "/foo2/images/foobar.png"] 
 	// ["/foo/bar2.png", "/foo2/image2s/foobar2.png", "/foo/bar/2.png"] 
@@ -240,6 +262,13 @@ int main(){
 	    cout<<"]";
 	    cout<<endl;
 	}
+
+
+	for( auto it: same_files ) {
+	    cout<<"file numbers = "<<(it.second).size()<<endl;
+	}
+	cout<<"map size = "<<same_files.size()<<endl;
+
 	//    listFilesInWorkingDirectory( ); 
 	//    cout<<workingDir<<endl;
     }
