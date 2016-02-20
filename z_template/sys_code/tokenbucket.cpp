@@ -5,6 +5,7 @@ using namespace std;
 
 
 pthread_mutex_t mtx;
+pthread_cond_t cv_empty, cv_fill;
 
 class bucket{
 public:
@@ -31,53 +32,43 @@ public:
 	int gt_ = it->gen_token;
 	int t_ = it->gen_time;
 	while(1){
-
+	    cout<<endl;
 	    cout<<"gen() thread id #"<<pthread_self();
 	    cout<<" generate " << gt_ << " token";
+	    cout<<endl;
 
-	    if( it->left + gt_ <=  it->max_capacity) {
-		pthread_mutex_lock( &mtx);
-		it->left += gt_;
-		pthread_mutex_unlock( &mtx);
-	    }
-	    else {
-		while( it->left + gt_ > it->max_capacity ){
-		    cout<<" waiting for the get() "<<endl;
-		    sleep( min(t_, 1) );
-		}
-	    }
+	    pthread_mutex_lock(&mtx);
 
-	    cout<<" now have "<<it->left<<endl;
+	    // it->left is the shared variable
+	    while( it->max_capacity == it->left )
+		pthread_cond_wait( &cv_empty, &mtx);
+	    
+	    it->left += gt_;
+	    pthread_cond_signal(&cv_fill);
+	    pthread_mutex_unlock(&mtx);
+
 	    sleep( t_ );
-	    // generate r tokens every t seconds 
 	}
 	return 0;
     }
 
     static void * get( void * arg ){
 	bucket * it = (bucket * ) arg;
-
 	while(1){
 	    cout<<endl<<"get token # "<< it->get_num <<"  | left tokens: "<< it->left<<endl;
-	    if( it->get_num <= it->left) {
-		pthread_mutex_lock( &mtx);
-		it->left -= it->get_num;
-		pthread_mutex_unlock( &mtx);
-		cout<<"fetch "<< it->get_num <<" token sucessfully. "<<endl;
-	    }  
-	    else{
-
-		// block when there is no enough resource
-		while( it->left < it->get_num){
-		    cout<<"get() thread id #"<<pthread_self();
-		    cout<<" waiting for the new tokens"<<endl;
-		    sleep( it->get_time);
-		}
+	    pthread_mutex_lock(&mtx);
+	    // it->left is the shared variable
+	    while( it->left < it->get_num  ) { // while( !condition){ }
+		cout<<endl;
+		cout<<"waiting "<<endl;
+		pthread_cond_wait( &cv_fill, &mtx);
 	    }
+	    it->left -= it->get_num; 
+	    cout<<endl<<"Thread #"<<pthread_self() <<" fetches "<< it->get_num <<" token sucessfully. "<<endl;
+	    pthread_cond_signal( &cv_empty);
+	    pthread_mutex_unlock(&mtx);
 	    sleep( it->get_time);
-
 	}
-
 	return 0;
     }
 
@@ -87,14 +78,22 @@ int main(){
     cout<<"token bucket simulation"<<endl;
 
     pthread_mutex_init ( &mtx, NULL);
-    pthread_t pgen, pget;
+    pthread_cond_init ( &cv_empty, NULL);
+    pthread_cond_init ( &cv_fill, NULL);
+    pthread_t pgen1, pgen2, pget1, pget2;
     bucket bkt(10, 1, 1, 10, 2 );
     bucket * pbkt = & bkt;
-    pthread_create(&pgen, NULL, bkt.gen, (void *) pbkt);
+    pthread_create(&pgen1, NULL, bkt.gen, (void *) pbkt);
+    sleep(1);
+    pthread_create(&pgen2, NULL, bkt.gen, (void *) pbkt);
     sleep(3);
-    pthread_create(&pget, NULL, bkt.get, (void *) pbkt);
-    pthread_join(pgen, NULL);
-    pthread_join(pget, NULL);
+    pthread_create(&pget1, NULL, bkt.get, (void *) pbkt);
+    sleep(1);
+    pthread_create(&pget2, NULL, bkt.get, (void *) pbkt);
+    pthread_join(pgen1, NULL);
+    pthread_join(pgen2, NULL);
+    pthread_join(pget1, NULL);
+    pthread_join(pget2, NULL);
 
     return 0;
 }
