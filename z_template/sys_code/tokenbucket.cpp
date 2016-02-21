@@ -77,6 +77,10 @@ public:
 int main(){
     cout<<"token bucket simulation"<<endl;
 
+//    int x = 1;
+//   char * y =  ((char *) &x);
+//    printf("%c\n", (*y +48) );
+
     pthread_mutex_init ( &mtx, NULL);
     pthread_cond_init ( &cv_empty, NULL);
     pthread_cond_init ( &cv_fill, NULL);
