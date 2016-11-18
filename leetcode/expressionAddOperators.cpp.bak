@@ -1,0 +1,131 @@
+#include<iostream>
+using namespace std;
+
+class Solution{
+
+    string bufferConstruct( vector<string> & buffer){
+	string res ="";
+	for( auto it : buffer) {
+	    res += it;
+	}
+	return res; 
+    }
+
+    void addOptDFS(vector<string> & result, string num, int target , 
+		  int op0,
+		  string pre_op,
+		  int op1.
+		  int sep,
+		  vector<string> & buffer
+		  ){
+
+	if( sep == num.length() ) {
+	    if( pre_op == "+" ) {
+		int res = op0+op1;
+		buffer.push_back("+");
+		buffer.push_back(to_string(op1));
+		if( res == target ) {
+		    string buffer_str = bufferConstruct( buffer);
+		    result.push_back(buffer_str);
+		}
+
+		buffer.pop_back();
+		buffer.pop_back();
+	    }
+	    if( pre_op == "-" ) {
+		int res = op0-op1;
+		buffer.push_back("-");
+		buffer.push_back(to_string(op1));
+		if( res == target ) 
+		{
+		    string buffer_str = bufferConstruct( buffer);
+		    result.push_back(buffer_str);
+		}
+		buffer.pop_back();
+		buffer.pop_back();
+	    }
+	    if( pre_op == "*" ) {
+		int res = op0*op1;
+		buffer.push_back("*");
+		buffer.push_back(to_string(op1));
+		if( res == target ) {
+		    string buffer_str = bufferConstruct( buffer);
+		    result.push_back(buffer_str);
+		}
+		buffer.pop_back();
+		buffer.pop_back();
+	    }
+	    return ; // ?
+	}
+
+	for( int i = 1 ; i <= num.length() - sep ; i++){
+	    string val = num.substr(sep, i);
+	    int op2 = stoi( val );
+	    if( pre_op == "+" ){ 
+
+		buffer.push_back(to_string(op0));
+		buffer.push_back(pre_op);
+		buffer.push_back(to_string(op1));
+		addOptDFS(result, num, target, op0 + op1, "+",    op2, sep+i, buffer); 
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+
+		buffer.push_back(to_string(op0));
+		buffer.push_back(pre_op);
+		buffer.push_back(to_string(op1));
+		addOptDFS(result, num, target, op0 + op1, "-",    -op2, sep+i, buffer); 
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+
+		buffer.push_back(to_string(op0));
+		buffer.push_back(pre_op);
+		buffer.push_back(to_string(op1));
+		addOptDFS(result, num, target, op0, pre_op, op1*op2, sep+i, buffer); 
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+	    }
+	    else if ( pre_op == "-" ) {
+		buffer.push_back(to_string(op0));
+		buffer.push_back(pre_op);
+		buffer.push_back(to_string(op1));
+		buffer.push_back("*");
+		buffer.push_back(val);
+		addOptDFS(result, num, target, op0      , pre_op, op1*op2, sep+i, buffer); 
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+	    }
+	    else if ( pre_op == "*"){
+		buffer.push_back(to_string(op0));
+		buffer.push_back("*");
+		buffer.push_back(to_string(op1));
+		addOptDFS(result, num, target, op0, pre_op, op1*op2, sep+i, buffer); 
+		buffer.pop_back();
+		buffer.pop_back();
+		buffer.pop_back();
+	    }
+	}
+    }
+
+public:
+    vector<string> addOperators(string num, int target){
+	vector<string> results;
+	vector<string> buffer;
+	addOptDFS( results, num, target, 0, "+", 0, 0, buffer);
+	return results;
+    }
+};
+
+int main(){
+    Solution a;
+    vector<string> b = a.addOperators( "123", 6);
+    for( auto it : b )
+	cout<it<<end;
+    return 0;
+}
+
