@@ -8,8 +8,6 @@ class Solution(object):
         if n == 0 : return []
         m = len(matrix[0])
         if m == 0 : return [] 
-        x = 0
-        y = 0
         res = []
         col_left = 0 
         col_right = m - 1 
