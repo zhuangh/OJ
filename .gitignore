@@ -1,4 +1,7 @@
-
+codejam/dcj_linux/
+*/*.swp*
+*/*.swo*
 env
 env/*
-
+a.out
+*/a.out
