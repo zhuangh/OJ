@@ -1,0 +1,6 @@
+
+class KiloManX(object):
+    def leastShots(self, damageChart, bossHealth):
+        
+
+
