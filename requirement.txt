@@ -2,3 +2,7 @@ pprintpp
 requests
 bs4
 lxml
+pandas
+numpy
+matplotlib
+seaborn
