@@ -92,6 +92,69 @@ class Solution(object):
         return [mm[sfrom].get(sto, -1.0) for sfrom, sto in queries ]
             
 
+ 
+    def calcEquationDFS(self, equations, values, queries):
+        import collections
+        Adj = collections.defaultdict(set)
+        weight = {}
+        for (x, y), z in zip(equations, values):
+            weight[(x,y)]= z
+            weight[(y,x)] = 1.00/z
+            Adj[x].add(y)
+            Adj[y].add(x)
+
+
+        def DFS(u, v, product = 1.0, visited=set()):
+            if u == v and Adj[u] :
+                return product
+            p = None
+            visited.add(u)
+            for x in Adj[u]:
+                if x not in visited:
+                    p = DFS(x, v, product*weight[(u, x)], visited)
+                if p:
+                    break
+            visited.remove(u)
+            return p
+
+        ret = []
+        for s, t in queries:
+            p = DFS(s,t)
+            ret.append(p if p else -1.0)
+        return ret
+
+        """
+        Adj = collections.defaultdict(list)
+        weights = {}  
+        for (t, s), v in zip(equations, values):
+            Adj[s] += t,
+            Adj[t] += s,
+            weights[(s, t)] = v
+            weights[(t, s)] = 1. / v
+
+        def DFS_visit(u, t, product=1., visited=set()):
+            if u == t and Adj[u]: 
+                return product
+                
+            visited.add(u)
+            p = None
+            for v in Adj[u]:
+                if v not in visited:
+                    p = DFS_visit(v, t, product * weights[(u, v)], visited)
+                
+                # If any search reaches t, then we are done. Otherwise, try others.
+                if p:
+                    break
+            visited.remove(u)
+            return p
+
+        result = []
+        for t, s in queries:
+            p = DFS_visit(s, t) 
+            result.append(p if p else -1.0)
+                
+        return result     
+        """
     
 # https://leetcode.com/problems/evaluate-division
 
@@ -104,4 +167,8 @@ queries = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]
 print(equations)
 print(values)
 print(queries)
-print(a.calcEquation(equations, values, queries))
+print(a.calcEquationDFS(equations, values, queries))
+equations = [["a","b"],["b","c"],["bc","cd"]]
+values=[1.5,2.5,5.0]
+queries = [["a","c"],["c","b"],["bc","cd"],["cd","bc"]]
+print(a.calcEquationDFS(equations, values, queries))
