@@ -1,3 +1,6 @@
+# TODO: efficiency of runtime
+# defaultdict?
+
 
 class Solution(object):
     def dfs_search(self, eqmap, dag, visited, sfrom, sto):
@@ -68,6 +71,28 @@ class Solution(object):
                 ret.append(res)
         return ret
 
+
+
+    def calcEquationFloydWarshall(self, equations, values, queries):
+        mm = collections.defaultdict(dict)
+        for it in range(0, len(values)):
+            (sfrom, sto) = equations[it]
+            mm[sfrom][sto] = values[it]
+            mm[sto][sfrom] = 1.0/values[it]
+            mm[sfrom][sfrom] = 1
+            mm[sto][sto] = 1
+            
+        #for it in queries:
+        #    (sfrom, sto) = it 
+        for k in mm:
+            for i in mm[k]:
+                for j in mm[k]:
+                    mm[i][j] = mm[i][k] * mm[k][j]
+                    
+        return [mm[sfrom].get(sto, -1.0) for sfrom, sto in queries ]
+            
+
+    
 # https://leetcode.com/problems/evaluate-division
 
 
