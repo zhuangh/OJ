@@ -25,6 +25,7 @@ def next_number(n):
   return j, nn
 
 def tidy_helper(n):
+  # greedy approach
   n = str(n)
   while True:
     #print(n)
@@ -32,6 +33,19 @@ def tidy_helper(n):
     if j == len(n)-1:
       break
   return int(n)
+
+"""
+def tidy_helper_search(n):
+  #if check(n) == True:
+  #  return n
+  r = n 
+  mid = int(n/2)
+  l = 0 
+  while l < r:
+    if check(mid)
+"""      
+
+  # search 
 
 t = int(input())  # read a line with a single integer
 for i in range(1, t+1):
