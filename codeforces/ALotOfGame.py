@@ -1,42 +1,92 @@
+ 
+class TrieNode:
+    def __init__(self):
+        self.childs = dict()
+        self.isWord = False
+        self.win = False
+        self.lose = False
+ 
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
 
+    def insert(self, word):
+        node = self.root
+        for letter in word:
+            child = node.childs.get(letter)
+            if child is None:
+                child = TrieNode()
+                node.childs[letter] = child
+            else:
+                if child.isWord == True:
+                    child.isWord = False
+                    child.lose = False
+                    child.win = False
+            node = child
+        node.isWord = True
+        node.win = False
+        node.lose = True
+ 
 
-class TrieTree(object):
-    def __init__ (self):
-        self.root = dict()
-        self.win = dict()  
-        self.lose = dict()  
-        
-    def add(self, s):
-        cur = self.root
-        for it in s:
-            if it not in cur: 
-                cur[it] = {}
-                self.win[it]={}
-            cur = cur[it]
+def DFS(node):
+    if node.isWord == True:
+        return 
     
-    def dfs(self, cur , from_it ):
-        is_leaf = True
-        for  to_it, it in cur.iteritems() :
-            is_leaf = False
-            self.dfs( it , from_it  ) 
-            self.win[ from_it ] =  not self.win[to_it]
-
-#if is_leaf :
-        self.win[from_it] = False 
-	
-
-    def sol(self, k) :
-        print(self.win['origin'])
-
-
-
-
-n , k = [int(s) for s in raw_input().split(" ")]
-tree =TrieTree() 
+    nodes = node.childs 
+    for it in nodes:
+        #print(it)
+        child = nodes.get(it)
+        DFS(child)
+        node.win |= not child.win
+        node.lose |= not child.lose
+    
+def firstWinOrLose(ttree):
+    node = ttree.root.childs
+    for it in node: 
+        #print(it)
+        child = node.get(it)
+        DFS(child) # first win, second win
+        ttree.root.win |= not child.win
+        ttree.root.lose |= not child.lose
+ 
+        
+    
+n, k = [int(s) for s in raw_input().split(" ")]
+tree =Trie() 
+win=dict()
+lose=dict()
 for i in xrange(0,n):
-    tree.add(raw_input())
+    #print(i)
+    s=raw_input()
+    tree.insert(s)
 
-tree.dfs( tree.root, 'origin' ) 
-tree.sol(k) 
+firstWinOrLose(tree)
+ 
+w = tree.root.win
+l = tree.root.lose
+
+if w == False:
+    print('Second')
+elif l:
+    print('First')
+elif k % 2 == 1:
+    print('First')
+else:
+    print('Second')
+
+"""    
+if w and l:
+    print('First')
+elif w:
+    if k%2==1:
+        print('First')
+    else:
+        print('Second')
+elif l == True: 
+    print('Second')
+"""
+#tree.printDFS()
+#tree.dfs( tree.root, 'origin' ) 
+#tree.sol(k) 
 
 
