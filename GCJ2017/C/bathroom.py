@@ -13,33 +13,35 @@ def bath(n,k):
     #print(reg)
     maxlr, minlr = check(reg)
     return int(maxlr), int(minlr)
+
 """
 
 from math import ceil, floor
 import heapq 
-from collections import defaultdict
 def bath(n, k):
     S = []
     heapq.heappush(S, -n)
-    C = defaultdict(int)
+    C = dict()
     C[n]=1
     P = 0
     while True:
         X = heapq.heappop(S)     
         X = -X   
-        X0 = ((X)//2) # overflow of (999999999999999999 - 1)/2 = 5e17
-        X1 = ((X-1)//2)
+        X0 = ceil((X-1)/2)
+        X1 = floor((X-1)/2)        
         P = P + C[X]
         if P >= k:
             return X0, X1
         else:
-            if X0 not in C:
-                heapq.heappush(S, -X0)
-            C[X0] += C[X]    
-            if X1 not in C:
-                heapq.heappush(S, -X1)   
-            C[X1] += C[X] 
+            heapq.heappush(S, -X0)
+            heapq.heappush(S, -X1)
+            C[X0] = C[X]
+            C[X1] = C[X]
+        
 
+
+        
+    
 
 t = int(input())  # read a line with a single integer
 for i in range(1, t+1):
