@@ -1,6 +1,6 @@
 package main
 
 func findItinerary(tickets [][]string) []string {
-	path=[]
+	path := []string("hello")
 	return path
 }
