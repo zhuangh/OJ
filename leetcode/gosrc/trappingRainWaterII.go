@@ -1,5 +1,9 @@
 package main
 
+// references:
+// https://husobee.github.io/heaps/golang/safe/2016/09/01/safe-heaps-golang.html
+// https://play.golang.org/p/Vz_mpb85uR
+
 import (
 	"container/heap"
 	"fmt"
