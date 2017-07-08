@@ -1,7 +1,7 @@
 
 import bisect 
 class BSTNode(object):
-    def __init__(self, data=None, left=None, right=None, cnt = 0):
+    def __init__(self, data=None, left=None, right=None, cnt = 1):
         self.data = data
         self.left = left
         self.right = right
@@ -10,24 +10,42 @@ class BSTNode(object):
 def insert(bstnode, data):
     if bstnode is None:
         #print(data)
-        bstnode = BSTNode(data=data)
-    elif data > bstnode.data:
-        insert(bstnode.right, data)
-    elif data < bstnode.data:
-        insert(bstnode.left, data)
+        bstnode = data
     else:
-        bstnode.cnt += 1
+        if data.data > bstnode.data:
+            #bstnode.cnt += 1
+            if bstnode.right is None:
+                bstnode.right = data
+            else:
+                insert(bstnode.right, data)
+        elif data.data < bstnode.data:
+            #bstnode.cnt += 1
+            if bstnode.left is None:
+                bstnode.left = data
+            else:
+                insert(bstnode.left, data)
+    return
+
+def pre_order_print(root):
+    if not root:
+        return
+    print(root.data, root.cnt)
+    pre_order_print(root.left)
+    pre_order_print(root.right)
+
 
 def getcnt(bstnode, data):
     if bstnode is None:
         return 0
     else:
-        res = 0
-        print(bstnode.data)
-        if bstnode.data == data:
+        #print(res)
+        res = 0 
+        if data <= bstnode.data:
             res += bstnode.cnt
-        res+= getcnt(bstnode.left, data)
-        res+= getcnt(bstnode.right, data)
+            res += getcnt(bstnode.left, data)
+            res += getcnt(bstnode.right, data)
+        else:
+            res += getcnt(bstnode.right, data)
         return res
 
 class Solution(object):
@@ -45,11 +63,17 @@ class Solution(object):
 
     def reversePairs(self, nums):
         res = 0
-        arr = None
-        for ele in nums:
-            res += getcnt(arr, 2*ele+1) 
+        if len(nums) == 0 or len(nums) == 1: 
+            return 0 
+        arr = BSTNode(data=nums[0])
+        for ele in nums[1::]:
+            res += getcnt(arr, ele*2 + 1) 
+            print(ele,res)
             #print(ele)
-            insert(arr, ele) 
+            e = BSTNode(data=ele)
+            #print(e.data)
+            insert(arr, e)
+        #pre_order_print(arr)
         return res
 
 
