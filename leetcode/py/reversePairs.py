@@ -13,13 +13,13 @@ def insert(bstnode, data):
         bstnode = data
     else:
         if data.data > bstnode.data:
-            #bstnode.cnt += 1
+            bstnode.cnt += 1
             if bstnode.right is None:
                 bstnode.right = data
             else:
                 insert(bstnode.right, data)
         elif data.data <= bstnode.data:
-            bstnode.cnt += 1
+            
             if bstnode.left is None:
                 bstnode.left = data
             else:
@@ -46,8 +46,8 @@ def getcnt(bstnode, data):
             res += bstnode.cnt
             res += getcnt(bstnode.left, data)
             #res += getcnt(bstnode.right, data)
-        #else:
-        #    res += getcnt(bstnode.right, data)
+        else:
+            res += getcnt(bstnode.right, data)
         return res
 
 class Solution(object):
@@ -65,18 +65,18 @@ class Solution(object):
         return res
 
     def reversePairs(self, nums):
-         """
+        """
         :type nums: List[int]
         :rtype: int
         """
-        # BST       
+        # BST
         res = 0
         if len(nums) == 0 or len(nums) == 1: 
             return 0 
         arr = BSTNode(data=nums[0])
         for ele in nums[1::]:
             res += getcnt(arr, ele*2 + 1) 
-            print(ele,res)
+            #print(ele,res)
             #print(ele)
             e = BSTNode(data=ele)
             #print(e.data)
