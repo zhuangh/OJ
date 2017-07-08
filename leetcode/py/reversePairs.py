@@ -18,12 +18,14 @@ def insert(bstnode, data):
                 bstnode.right = data
             else:
                 insert(bstnode.right, data)
-        elif data.data < bstnode.data:
-            #bstnode.cnt += 1
+        elif data.data <= bstnode.data:
+            bstnode.cnt += 1
             if bstnode.left is None:
                 bstnode.left = data
             else:
                 insert(bstnode.left, data)
+        #else:
+        #    bstnode.cnt += 1
     return
 
 def pre_order_print(root):
@@ -43,9 +45,9 @@ def getcnt(bstnode, data):
         if data <= bstnode.data:
             res += bstnode.cnt
             res += getcnt(bstnode.left, data)
-            res += getcnt(bstnode.right, data)
-        else:
-            res += getcnt(bstnode.right, data)
+            #res += getcnt(bstnode.right, data)
+        #else:
+        #    res += getcnt(bstnode.right, data)
         return res
 
 class Solution(object):
@@ -54,6 +56,7 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        # binary search solution (n^2+nlogn)
         res = 0
         arr = [] 
         for ele in nums:
@@ -62,6 +65,11 @@ class Solution(object):
         return res
 
     def reversePairs(self, nums):
+         """
+        :type nums: List[int]
+        :rtype: int
+        """
+        # BST       
         res = 0
         if len(nums) == 0 or len(nums) == 1: 
             return 0 
