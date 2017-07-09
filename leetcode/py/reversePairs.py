@@ -14,16 +14,16 @@ def insert(bstnode, data):
     else:
         if data.data > bstnode.data:
             bstnode.cnt += 1
-            #if bstnode.right is None:
-            #    bstnode.right = data
-            #else:
-            insert(bstnode.right, data)
+            if bstnode.right is None:
+                bstnode.right = data
+            else:
+                insert(bstnode.right, data)
         elif data.data <= bstnode.data:
             #
-            #if bstnode.left is None:
-            #    bstnode.left = data
-            #else:
-            insert(bstnode.left, data)
+            if bstnode.left is None:
+                bstnode.left = data
+            else:
+                insert(bstnode.left, data)
         #else:
         #    bstnode.cnt += 1
     return
@@ -81,7 +81,7 @@ class Solution(object):
             e = BSTNode(data=ele)
             #print(e.data)
             insert(arr, e)
-        #pre_order_print(arr)
+        pre_order_print(arr)
         return res
 
 
