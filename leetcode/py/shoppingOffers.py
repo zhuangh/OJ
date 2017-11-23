@@ -6,18 +6,13 @@ class Solution:
         return p
 
     def helper(self, price, special, needs_left, progress, mem):
-        #if progress in mem:
-        #    return mem[progress]
         key = tuple(needs_left)
-        #if key in mem:
-        #    return mem[key]
+        if key in mem:
+            return mem[key]
         p = self.evaluate_price(price, needs_left)
-        #print('direct purchase', needs_left, p)
         for i in range(progress, len(special)):
             needs_left_tmp = []
             for j in range(0, len(needs_left)):
-                #print(needs_left)
-                #print(special[i])
                 lft = needs_left[j] - special[i][j]
                 if lft < 0:
                     needs_left_tmp = []
@@ -25,12 +20,8 @@ class Solution:
                 else:
                     needs_left_tmp.append(lft)
             if len(needs_left_tmp) == len(needs_left):
-                #print(needs_left_tmp)
-                #print(special[i])
-                #print(special[i][-1])
                 p = min(p, special[i][-1] + self.helper(price, special, needs_left_tmp, i, mem))
-                #print('take special', p)
-        #mem[key] = p
+        mem[key] = p
         return p
 
     def shoppingOffers(self, price, special, needs):
