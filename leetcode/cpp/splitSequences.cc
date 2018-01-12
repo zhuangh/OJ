@@ -1,5 +1,5 @@
 using hq_type = priority_queue<int, vector<int>, greater<int> > ;
-using map_q_type = unordered_map<int, hq_type *  >; 
+using map_q_type = unordered_map<int, shared_ptr<hq_type> >; 
 
 class Solution {
 public:
@@ -13,14 +13,14 @@ public:
         map_q_type mm;
         for(auto it : nums){
             if(mm.find(it-1) == mm.end() || mm[it-1]->size() == 0){
-                if (mm.find(it) == mm.end()) mm[it] = new hq_type();
+                if (mm.find(it) == mm.end()) mm[it] = std::make_shared<hq_type>();
                 mm[it]->push(1);
             }
             else{
                 if(mm[it-1]->size() > 0){
                     int l = mm[it-1]->top();  
                     mm[it-1]->pop(); 
-                    if(mm.find(it) == mm.end()) mm[it] = new hq_type();
+                    if(mm.find(it) == mm.end()) mm[it] = std::make_shared<hq_type>();
                     mm[it]->push(l+1);
                 }
             }
