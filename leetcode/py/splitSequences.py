@@ -23,4 +23,3 @@ class Solution:
                 if it < 3: 
                     return False
         return True
-    
