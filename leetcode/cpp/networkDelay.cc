@@ -6,6 +6,26 @@ using heapType = std::priority_queue<pairType, vector<pairType> >;
 class Solution {
 
 private:
+    int bellmanFord(const int & K, const int &N, std::vector<int> &delay, graphType & graph, const int &TIMEOUT ){
+        int d = -1;
+        delay[K] = 0;
+        for(int j = 0 ; j < N-1; j++){
+            for(int i = 0 ; i < N; i++){
+                const vector<pairType> vec_link = graph[i];
+                for(const auto & it : vec_link){
+                    const int v = it.first;
+                    const int w = it.second;
+                    if(delay[i] + w < delay[v])
+                        delay[v] = delay[i]+w;
+                }
+            }
+        }
+        for(const auto & it : delay){
+            if( it > d ) d = it;
+            if( it == TIMEOUT) return -1; //delay = -1;
+        }
+        return d;
+    }
     
     int dijkstra(const int & K, const int &N, std::vector<int> &delay, graphType & graph, const int &TIMEOUT ){
         int d = -1;
@@ -25,13 +45,6 @@ private:
                         Q.push(std::make_pair(-w, v));
                     }
                 } 
-            /*
-            cout<<"size "<<Q.size()<<endl;
-            for(auto it : delay){
-                cout<<it<<endl;
-            }
-            */
-            
         }
         for(const auto & it : delay){
             if( it > d ) d = it;
@@ -53,6 +66,7 @@ public:
             graph[u].push_back(make_pair(v, w));
         }
         
-        return dijkstra(K-1, N, delay, graph, TIMEOUT); 
+        return bellmanFord(K-1, N, delay, graph, TIMEOUT); 
+        //return dijkstra(K-1, N, delay, graph, TIMEOUT); 
     }
 };
