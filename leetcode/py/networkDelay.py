@@ -10,15 +10,21 @@ class Solution:
     def dijkstra(self, K, N, delay, graph, TIMEOUT):
         Q = set(range(N))                
         delay[K-1] = 0
-        while len(Q) > 0:
-            u = None
-            for node in Q:
-                if u == None or delay[node] < delay[u]:
-                    u = node
-            Q.remove(u)
+        hp = []
+        heapq.heappush(hp, (0, K-1))
+        while len(hp) > 0:
+            #u = None
+            #for node in Q:
+            #    if u == None or delay[node] < delay[u]:
+            #        u = node
+            _, u = heapq.heappop(hp) 
+            #print(u)
+            #heappop(hp)
+            #Q.remove(u)
             for v, w in graph[u].items():
                 if delay[u] + w < delay[v]:
                     delay[v] = delay[u] + w
+                    heapq.heappush(hp, (delay[v], v))
             #print(delay)
         d = max(delay)
         if d == TIMEOUT:
@@ -59,5 +65,6 @@ class Solution:
         for list_it in times:        
             u, v, w = list_it
             graph[u-1][v-1] = w
-        #return self.dijkstra(K, N, delay, graph, TIME_OUT)#, visited_map)                
-        return self.bellman_ford(K, N, delay, pre, graph, TIME_OUT)
+        #print('--')
+        return self.dijkstra(K, N, delay, graph, TIME_OUT)#, visited_map)                
+        #return self.bellman_ford(K, N, delay, pre, graph, TIME_OUT)
