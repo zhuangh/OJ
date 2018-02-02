@@ -55,12 +55,12 @@ void func(HashMap &hm){//, int k, int v){
 }
 
 int main(){
-    const int NUM = 10;
+    const int NUM = 100;
     std::thread thd[NUM];
     HashMap hm;
     for(int i = 0 ; i < NUM; i++)
     {
-	thd[i] = std::thread(std::ref(hm), i, i*100);//, i, i*100);
+	thd[i] = std::thread(std::ref(hm), i%10, i*100);//, i, i*100);
     }
 
     for(int i = 0; i< NUM; i++){
