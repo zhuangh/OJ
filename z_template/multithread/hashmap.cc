@@ -11,8 +11,8 @@
 //using TV = int;
 class HashMap{
 private:
-    //std::mutex mtx;
-    //std::condition_variable cond;
+    std::mutex mtx;
+    std::condition_variable cond;
     std::unordered_map<int, int> hmap;
 
 public:
