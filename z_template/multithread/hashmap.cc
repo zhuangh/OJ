@@ -11,8 +11,8 @@
 //using TV = int;
 class HashMap{
 private:
-    std::mutex mtx;
-    std::condition_variable cond;
+    std::mutex mtx_;
+    std::condition_variable cond_
     std::unordered_map<int, int> hmap;
 
 public:
@@ -26,17 +26,24 @@ public:
     }
 
     bool Find(const int& k){
+	//::unique_lock<std::mutex> ul(mtx);
+	std::lock_guard<std::mutex> ul(mtx_);
 	if(hmap.find(k) != hmap.end()) return true;
 	return false;
     }
 
     int Get(const int& k){
+	//std::unique_lock<std::mutex> ul(mtx);
+	std::lock_guard<std::mutex> ul(mtx_);
 	int val = hmap[k];
+        //lk.unlock()
 	return val;
     }
 
     void Insert(const int & k, const int &v){
 	//std::cout<<v<<std::endl;
+	std::lock_guard<std::mutex> ul(mtx_);
+	//std::unique_lock<std::mutex> ul(mtx);
 	hmap[k] = v;
 	//print();
     }
