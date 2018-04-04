@@ -9,10 +9,19 @@
 //template<typename TK, typename TV>
 //using TK = int;
 //using TV = int;
+
+
+class thread_pool{
+pirvate:
+    std::vector<std::thread>> _threads;
+    enum class command {wait, run, stop};
+    std::atomic<command> _cmd;
+};
+
 class HashMap{
 private:
     std::mutex mtx_;
-    std::condition_variable cond_
+    std::condition_variable cond_;
     std::unordered_map<int, int> hmap;
 
 public:
