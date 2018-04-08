@@ -44,6 +44,7 @@ int main()
             if (Dist[nxt] < (Dist[now]-C[now][nxt])*R[now][nxt]) {
                 Dist[nxt] = (Dist[now]-C[now][nxt])*R[now][nxt];
                 if (!inQueue[nxt]) {
+		    // relax candidate
                     Q.push(nxt);
                     inQueue[nxt] = true;
                 }
